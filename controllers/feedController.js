@@ -21,7 +21,6 @@ exports.createPost = (req, res, next) => {
             msg: "Você precisa enviar os dados corretamente!!"
         })
     }
-
     //Add este post ao DB
 
     res.status(201).json({
