@@ -7,6 +7,15 @@ const feedRoutes = require("./routes/feedRoutes")
 //Json parser do express - middleware para 'captar' os json do client!
 app.use(express.json());
 
+//middleware para configurar o CORS
+
+app.use((req, res, next)=> {
+    res.setHeader('Access-Control-Allow-Origin', '*');
+    res.setHeader('Access-Control-Allow-Methods', 'GET, PUT, POST, PATCH, DELETE');
+    res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
+    next();
+});
+
 //Rotas do app - Esse middleware vai captar todas as rotas criadas no feedRoutes
 app.use('/feed', feedRoutes)
 
