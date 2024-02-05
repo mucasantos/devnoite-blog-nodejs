@@ -10,10 +10,9 @@ exports.getPosts = (req, res, next) => {
 }
 
 exports.createPost = (req, res, next) => {
+
     const title = req.body.title;
     const content = req.body.content;
-
-    //Validação simples => verificar se os dados foram enviados corretamente!
 
     if (!title || !content) {
         return res.status(400).json({
@@ -27,5 +26,26 @@ exports.createPost = (req, res, next) => {
         error: false,
         msg: "Post criado com sucesso!!"
     })
+}
 
+//Rotas para atualizar e deletar um post
+
+exports.updatePost = (req, res, next) => {
+    const postId = req.params.postID;
+    //Buscar no DB
+    console.log(postId);
+    res.status(200).json({
+        msg: "Post atualizado com sucesso!",
+        post: postId
+    });
+}
+
+exports.deletePost = (req, res, next) => {
+    const postID = req.params.postID;
+    //Buscar no DB
+    console.log(postID);
+    res.status(200).json({
+        msg: "Post excluído com sucesso!",
+        post: postID
+    });
 }
