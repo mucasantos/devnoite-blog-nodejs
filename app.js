@@ -19,8 +19,6 @@ app.use((req, res, next)=> {
 //Rotas do app - Esse middleware vai captar todas as rotas criadas no feedRoutes
 app.use('/feed', feedRoutes)
 
-
-
 app.listen(port, ()=> {
     console.log("Server online na porta: " + port)
 })
