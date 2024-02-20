@@ -1,4 +1,6 @@
 const express= require("express");
+const mongoose = require("mongoose");
+
 const app = express();
 
 const port = 8080;
@@ -21,6 +23,13 @@ app.use((req, res, next)=> {
 app.use('/feed', feedRoutes)
 app.use('/auth', authRoutes)
 
-app.listen(port, ()=> {
-    console.log("Server online na porta: " + port)
+mongoose.connect("mongodb://127.0.0.1:27017/blog")
+.then(result => {
+    app.listen(port, ()=> {
+        console.log("Server online na porta: " + port)
+    })
 })
+.catch(error => {
+    console.log(error)
+})
+
