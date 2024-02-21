@@ -26,9 +26,12 @@ exports.createPost = (req, res, next) => {
         });
     }
 
+    console.log("Aqui...")
+console.log(req.file)
+
     const title = req.body.title;
     const content = req.body.content;
-    const imageUrl = req.body.imageUrl;
+    const imageUrl = req.file.path;
 
     const postagem = new Post({
         title: title,
