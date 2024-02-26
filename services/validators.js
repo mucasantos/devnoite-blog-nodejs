@@ -29,6 +29,4 @@ module.exports = {
     validateTitle: check("title")
         .isLength({ min: 5 })
         .withMessage("O título precisa de pelo menos 5 caracters!")
-
-
 }
