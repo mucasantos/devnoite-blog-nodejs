@@ -1,17 +1,32 @@
 const { validationResult } = require("express-validator");
 const Post = require('../models/post');
 
+//Ao posts, mandar aos poucos, ou seja, com paginação
 exports.getPosts = (req, res, next) => {
+
+    const page = req.query.page || 1;
+    const perPage = req.query.perPage || 5;
+    let totalItems;
+
     Post.find()
-    .then(result => {
-        res.status(200).json({
-            posts: result
+        .countDocuments()
+        .then(total => {
+            totalItems = total;
+
+            return Post.find()
+                .skip((page - 1) * perPage)
+                .limit(perPage);
         })
-    })
-    .catch(error => {
-        console.log(error);
-    })
-    
+        .then(result => {
+            res.status(200).json({
+                totalItems: totalItems,
+                posts: result
+            })
+        })
+        .catch(error => {
+            console.log(error);
+        })
+
 }
 
 exports.createPost = (req, res, next) => {
@@ -27,7 +42,7 @@ exports.createPost = (req, res, next) => {
     }
 
     console.log("Aqui...")
-console.log(req.file)
+    console.log(req.file)
 
     const title = req.body.title;
     const content = req.body.content;
@@ -35,8 +50,8 @@ console.log(req.file)
 
     const postagem = new Post({
         title: title,
-        content:content,
-        imageUrl:imageUrl,
+        content: content,
+        imageUrl: imageUrl,
     })
 
     //Add este post ao DB
