@@ -37,7 +37,13 @@ app.use('/auth', authRoutes)
 
 //Está interceptando os erros 
 app.use((error, req, res, next) => {
-    res.status(error.statusCode).json({ error: error.data })
+    const message = error.message;
+    const status = error.statusCode || 500;
+    const data = error.data;
+
+    console.log(message)
+
+    res.status(status).json({ message: message, error: data })
 })
 
 mongoose.connect("mongodb://127.0.0.1:27017/blog")

@@ -11,7 +11,7 @@ router.get('/posts', feedController.getPosts);
 
 //Validar as informações
 router.post('/post',
-    [    
+    [
         validateTitle
     ]
     ,
