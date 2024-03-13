@@ -7,7 +7,7 @@ exports.getPosts = (req, res, next) => {
     const page = req.query.page || 1;
     const perPage = req.query.perPage || 5;
     let totalItems;
-
+ 
     Post.find()
         .countDocuments()
         .then(total => {
