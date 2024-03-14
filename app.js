@@ -48,11 +48,14 @@ app.use((error, req, res, next) => {
 
 mongoose.connect("mongodb://127.0.0.1:27017/blog")
     .then(result => {
+
+        console.log("Conectado ao DB!");
         app.listen(port, () => {
             console.log("Server online na porta: " + port)
         })
     })
     .catch(error => {
-        console.log(error)
+        console.log(error.cause.code)
+        console.log(error.cause.input)
     })
 

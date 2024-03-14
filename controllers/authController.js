@@ -1,6 +1,8 @@
 const { validationResult } = require("express-validator");
 const User = require("../models/user")
 const bcrypt = require("bcrypt");
+const jwt = require("jsonwebtoken");
+const user = require("../models/user");
 
 exports.signUpUser = (req, res, next) => {
     const errors = validationResult(req);
@@ -39,12 +41,9 @@ exports.signUpUser = (req, res, next) => {
                     result: error
                 })
             })
-
     })
-
-
 }
-exports.signInUser =async (req, res, next) => {
+exports.signInUser = async (req, res, next) => {
     const email = req.body.email;
     const password = req.body.password;
     let loadedUser;
@@ -54,19 +53,32 @@ exports.signInUser =async (req, res, next) => {
             //validar que email não existe na base
             console.log(user)
             if (!user) {
-              return  Promise.reject("Falha de validação");
-                //error.statusCode = 422;
-                //throw error;
+                const error = new Error("Usuário não encontrado...");
+                error.statusCode = 401;
+                throw error;
             }
             loadedUser = user;
             return bcrypt.compare(password, user.password);
         }).then(passIsEqual => {
             if (!passIsEqual) {
-                return res.json({ message: "Senha inválida..." })
+                const error = new Error("Email ou senha errada...");
+                error.statusCode = 401;
+                throw error;
             }
-            return res.status(200).json({ message: "Usuário logado com sucesso!" })
+            const token = jwt.sign({
+                email: loadedUser.email,
+                userId: loadedUser._id.toString()
+            },
+                "MinhaChaveSecreta!@2024%NodeJS",
+                { expiresIn: "1h" }
+            )
+            return res.status(200).json({ message: "Usuário logado com sucesso!", userId: loadedUser._userId, token: token, })
         })
         .catch(error => {
             console.log(error)
+            if (!error.statusCode) {
+                error.statusCode = 500
+            }
+            next(error)
         })
 }

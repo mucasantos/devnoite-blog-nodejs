@@ -1,5 +1,7 @@
 const { validationResult } = require("express-validator");
 const Post = require('../models/post');
+const User = require('../models/user');
+const post = require("../models/post");
 
 //Ao posts, mandar aos poucos, ou seja, com paginação
 exports.getPosts = (req, res, next) => {
@@ -41,26 +43,50 @@ exports.createPost = (req, res, next) => {
         });
     }
 
-    console.log("Aqui...")
-    console.log(req.file)
+    if (!req.file) {
+        const error = new Error("Por favor envie uma imagem!")
+        error.statusCode = 422;
+        error.data = "Cliente não enviou imagem..."
+        throw error;
+    }
 
     const title = req.body.title;
     const content = req.body.content;
     const imageUrl = req.file.path;
 
+    let postCreator;
+
     const postagem = new Post({
         title: title,
         content: content,
         imageUrl: imageUrl,
+        creator: req.userId,
     })
 
     //Add este post ao DB
     postagem.save()
         .then(result => {
+            return User.findById(req.userId)
+        })
+        .then(user => {
+            postCreator = user;
+            user.posts.push(postagem);
+            return user.save()
+
+        }).then(result => {
             res.status(201).json({
-                error: false,
-                message: "Post criado com sucesso!!"
-            })
+                message: "Post criado com sucesso!!",
+                creator: {
+                    _id: postCreator._id,
+                    name: postCreator.name,
+                }
+            });
+        })
+        .catch(err => {
+            if (!err.statusCode) {
+                err.statusCode = 500
+                throw err;
+            }
         })
 }
 
