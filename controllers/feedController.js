@@ -1,5 +1,6 @@
 const { validationResult } = require("express-validator");
 const Post = require('../models/post');
+const User = require('../models/user');
 
 //Ao posts, mandar aos poucos, ou seja, com paginação
 exports.getPosts = (req, res, next) => {
@@ -7,7 +8,7 @@ exports.getPosts = (req, res, next) => {
     const page = req.query.page || 1;
     const perPage = req.query.perPage || 5;
     let totalItems;
- 
+
     Post.find()
         .countDocuments()
         .then(total => {
@@ -48,18 +49,36 @@ exports.createPost = (req, res, next) => {
     const content = req.body.content;
     const imageUrl = req.file.path;
 
+    //modificações para o post ser do usuário!
+    let postCreator;
+
     const postagem = new Post({
         title: title,
         content: content,
         imageUrl: imageUrl,
+        creator: req.userId, // posso acessar, pois adicionei essa propriedade no is-auth
     })
 
     //Add este post ao DB
     postagem.save()
+    //Fui da base de dados pegar o user
         .then(result => {
+            return User.findById(req.userId)
+        })
+        //adicionei o post na lista de posts deste user
+        .then(user => {
+            postCreator = user;
+            user.posts.push(postagem);
+            return user.save();
+        })
+        //devolvi a resposta!
+        .then(result=> {
             res.status(201).json({
-                error: false,
-                message: "Post criado com sucesso!!"
+                message: "Post criado com sucesso!!",
+                creator: {
+                    _id: postCreator._id,
+                    name: postCreator. name,
+                } 
             })
         })
 }

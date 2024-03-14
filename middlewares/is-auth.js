@@ -25,5 +25,7 @@ module.exports = (req, res, next)=> {
         throw error;
     }
 
+    //adicionei ao objeto req, a propriedade userId
+    req.userId = decodedToken.userId;
     next();
 }
