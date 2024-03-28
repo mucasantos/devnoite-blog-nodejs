@@ -74,7 +74,7 @@ exports.signInUser = async (req, res, next) => {
                     userId: loadedUser._id.toString()
                 },
                 "MinhaChaveJWT@2024Senai",
-                { expiresIn: "1h" }
+                { expiresIn: "4h" }
             )
 
             return res.status(200).json({
