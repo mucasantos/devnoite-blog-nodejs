@@ -90,6 +90,8 @@ somente depois dessa validação, vai excluir o user da base!
 */
 exports.delete = (req, res, next) => {
     let password = req.body.password;
+
+    
     User.findById(req.userId)
         .then(result => {
 

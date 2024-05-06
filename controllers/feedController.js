@@ -99,6 +99,7 @@ exports.deletePost = (req, res, next) => {
     const postID = req.params.postID;
     //Buscar no DB
     console.log(postID);
+    
     res.status(200).json({
         msg: "Post excluído com sucesso!",
         post: postID

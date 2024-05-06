@@ -44,6 +44,7 @@ app.use((error, req, res, next) => {
     const status = error.statusCode || 500;
     const data = error.data;
 
+    console.log( "Aquiiii,,,,,")
     console.log(message)
 
     res.status(status).json({ message: message, error: data })
