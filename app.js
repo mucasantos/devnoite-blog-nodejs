@@ -20,7 +20,8 @@ app.use(express.json());
 app.use(multer({ storage: uploadFiles.fileStorage, fileFilter: uploadFiles.fileFilter })
 .single('image'),)
 
-app.use("images", express.static(path.join(__dirname, 'images')))
+app.use("/images", express.static(path.join(__dirname, 'images')))
+
 
 //middleware multer
 

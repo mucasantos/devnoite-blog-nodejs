@@ -23,6 +23,8 @@ exports.getPosts = (req, res, next) => {
         .then(result => {
 
             console.log(result[0].creator)
+
+            console.log(result)
             res.status(200).json({
                 totalItems: totalItems,
                 posts: result
