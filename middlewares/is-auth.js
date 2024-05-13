@@ -7,7 +7,7 @@ const jwt = require("jsonwebtoken");
 
 module.exports = (req, res, next)=> {
     //Pegar o token sem a palavra Bearer
-    const token =req.get("Authorization")
+    let token =req.get("Authorization")
 
     if(!token){
         const error = new Error("Não enviou Token válido")
