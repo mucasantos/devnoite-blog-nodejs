@@ -5,14 +5,14 @@ module.exports = {
     validateEmail: check("email")
         .isEmail()
         .withMessage("Digite um email válido!")
-      // .custom((value, { req }) => {
-      //     if (value === "juca@email.com") {
-       //       throw new Error("Email já consta no banco de dados!");
-       //    }
-       //    return true;
-      // })
-      ,
-    
+    // .custom((value, { req }) => {
+    //     if (value === "juca@email.com") {
+    //       throw new Error("Email já consta no banco de dados!");
+    //    }
+    //    return true;
+    // })
+    ,
+
     validatePassword: check("password")
         .isLength({ min: 8 })
         .withMessage("A senha precisa de pelo menos 8 caracters!"),
@@ -30,18 +30,22 @@ module.exports = {
     validateTitle: check("title")
         .isLength({ min: 5 })
         .withMessage("O título precisa de pelo menos 5 caracters!"),
-    
+
+    validateContent: check("content")
+        .isLength({ min: 5 })
+        .withMessage("O título precisa de pelo menos 5 caracters!"),
+
     validateEmailExists: check("email")
-    .isEmail()
-    .custom((emailRecebido, {req})=>{
-        //Acessar a base e verificar se já existe ou não este email...
-       return User.findOne({email: emailRecebido}).then(user => {
+        .isEmail()
+        .custom((emailRecebido, { req }) => {
+            //Acessar a base e verificar se já existe ou não este email...
+            return User.findOne({ email: emailRecebido }).then(user => {
 
-        //Rejeita uma solicitação e transforma em um Erro.
-        if(user)    {
-            return Promise.reject("Email já existe...")
-        }
+                //Rejeita uma solicitação e transforma em um Erro.
+                if (user) {
+                    return Promise.reject("Email já existe...")
+                }
 
+            })
         })
-    })
 }
