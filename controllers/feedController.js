@@ -11,18 +11,15 @@ exports.getPosts = (req, res, next) => {
 
     Post.find()
         .countDocuments()
-        .populate('creator', '_id name')
-        .exec()
         .then(total => {
             totalItems = total;
 
             return Post.find()
+                .populate("creator", 'name email')
                 .skip((page - 1) * perPage)
                 .limit(perPage);
         })
         .then(result => {
-
-            console.log(result[0].creator)
 
             console.log(result)
             res.status(200).json({
@@ -51,7 +48,7 @@ exports.createPost = (req, res, next) => {
     console.log("Aqui...")
     console.log(req.file)
 
-    if (!req.file){
+    if (!req.file) {
         const error = new Error("Faltou enviar a imagem!!");
         error.statusCode = 422;
         throw error;
@@ -73,7 +70,7 @@ exports.createPost = (req, res, next) => {
 
     //Add este post ao DB
     postagem.save()
-    //Fui da base de dados pegar o user
+        //Fui da base de dados pegar o user
         .then(result => {
             return User.findById(req.userId)
         })
@@ -84,13 +81,13 @@ exports.createPost = (req, res, next) => {
             return user.save();
         })
         //devolvi a resposta!
-        .then(result=> {
+        .then(result => {
             res.status(201).json({
                 message: "Post criado com sucesso!!",
                 creator: {
                     _id: postCreator._id,
-                    name: postCreator. name,
-                } 
+                    name: postCreator.name,
+                }
             })
         })
 }
@@ -111,7 +108,7 @@ exports.deletePost = (req, res, next) => {
     const postID = req.params.postID;
     //Buscar no DB
     console.log(postID);
-    
+
     res.status(200).json({
         msg: "Post excluído com sucesso!",
         post: postID
