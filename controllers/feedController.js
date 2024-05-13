@@ -11,6 +11,8 @@ exports.getPosts = (req, res, next) => {
 
     Post.find()
         .countDocuments()
+        .populate('creator', '_id name')
+        .exec()
         .then(total => {
             totalItems = total;
 
@@ -19,6 +21,8 @@ exports.getPosts = (req, res, next) => {
                 .limit(perPage);
         })
         .then(result => {
+
+            console.log(result[0].creator)
             res.status(200).json({
                 totalItems: totalItems,
                 posts: result
@@ -44,6 +48,12 @@ exports.createPost = (req, res, next) => {
 
     console.log("Aqui...")
     console.log(req.file)
+
+    if (!req.file){
+        const error = new Error("Faltou enviar a imagem!!");
+        error.statusCode = 422;
+        throw error;
+    }
 
     const title = req.body.title;
     const content = req.body.content;
