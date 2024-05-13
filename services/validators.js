@@ -46,6 +46,8 @@ module.exports = {
                     return Promise.reject("Email já existe...")
                 }
 
+                return null
+
             })
         })
 }
