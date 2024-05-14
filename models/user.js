@@ -15,6 +15,9 @@ const userSchema =new Schema (
             type: String,
             required: true
         },
+        avatar: {
+            type: String,
+        },
         posts: [
             {
                 type: Schema.Types.ObjectId,

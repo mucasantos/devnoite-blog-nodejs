@@ -2,6 +2,7 @@ const { validationResult } = require("express-validator");
 const User = require("../models/user")
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
+const faker = require('@faker-js/faker');
 
 exports.signUpUser = (req, res, next) => {
     const errors = validationResult(req);
@@ -18,6 +19,7 @@ exports.signUpUser = (req, res, next) => {
     const email = req.body.email;
     const name = req.body.name;
     const password = req.body.password;
+
     //A senha está sendo salva em formato texto!!!
     //um problema!! Salvar ela criptografada!
     bcrypt.hash(password, 12).then(passHashed => {
@@ -26,6 +28,7 @@ exports.signUpUser = (req, res, next) => {
             email: email,
             name: name,
             password: passHashed,
+            avatar: faker.faker.image.url()
         })
 
         user.save()
