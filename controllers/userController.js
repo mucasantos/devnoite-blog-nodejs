@@ -79,8 +79,13 @@ exports.update = (req, res, next) => {
     return res.status(500).json({ msg: "Nada alterado..." });
   }
 
+  let myuser;
+
   User.findById(req.userId)
     .then((user) => {
+      myuser = user;
+
+      console.log(user);
       user.name = req.body.name;
       return user.save();
     })
@@ -90,6 +95,9 @@ exports.update = (req, res, next) => {
       res.status(200).json({ profile: userChanged });
     })
     .catch((err) => {
+      if (!myuser) {
+        err.msg = "User doesn't exists!";
+      }
       res.status(500).json({ msg: err });
     });
 };
