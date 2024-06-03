@@ -6,7 +6,7 @@ const User = require('../models/user');
 exports.getPosts = (req, res, next) => {
 
     const page = req.query.page || 1;
-    const perPage = req.query.perPage || 50;
+    const perPage = req.query.perPage || 10;
     let totalItems;
 
     Post.find()
